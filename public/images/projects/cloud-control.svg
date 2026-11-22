@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%" fill="none">
+  <rect width="1200" height="675" fill="#141414"/>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#222222" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B6FF5C" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#141414" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="675" fill="url(#grid)"/>
+  <circle cx="950" cy="200" r="280" fill="url(#glow)"/>
+  
+  <!-- Technical Framing -->
+  <line x1="60" y1="60" x2="1140" y2="60" stroke="#333" stroke-width="1"/>
+  <line x1="60" y1="615" x2="1140" y2="615" stroke="#333" stroke-width="1"/>
+  <line x1="60" y1="60" x2="60" y2="615" stroke="#333" stroke-width="1"/>
+  <line x1="1140" y1="60" x2="1140" y2="615" stroke="#333" stroke-width="1"/>
+
+  <!-- Crosshairs -->
+  <path d="M 50 60 L 70 60 M 60 50 L 60 70" stroke="#B6FF5C" stroke-width="2"/>
+  <path d="M 1130 60 L 1150 60 M 1140 50 L 1140 70" stroke="#B6FF5C" stroke-width="2"/>
+  <path d="M 50 615 L 70 615 M 60 605 L 60 625" stroke="#B6FF5C" stroke-width="2"/>
+  <path d="M 1130 615 L 1150 615 M 1140 605 L 1140 625" stroke="#B6FF5C" stroke-width="2"/>
+
+  <!-- Brand Label -->
+  <text x="100" y="110" font-family="monospace" font-size="14" fill="#B6FF5C" letter-spacing="3">AXION TECHNOLOGIES // SYS-ENG</text>
+  <text x="1050" y="110" text-anchor="end" font-family="monospace" font-size="14" fill="#666" letter-spacing="2">REV 2026.04</text>
+
+  <!-- Editorial typography -->
+  <text x="100" y="240" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="44" fill="#F5F3EF" letter-spacing="-1">HYPERION CLOUD ORCHESTRATOR</text>
+  <text x="100" y="280" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="20" fill="#A5A5A5">Multi-Region Kubernetes Control Plane & Automated Failover</text>
+
+  <!-- Code / Abstract Blueprint -->
+  <rect x="100" y="340" width="1000" height="210" fill="#181818" stroke="#282828" stroke-width="1" rx="4"/>
+  <circle cx="130" cy="365" r="5" fill="#EF4444"/>
+  <circle cx="150" cy="365" r="5" fill="#EAB308"/>
+  <circle cx="170" cy="365" r="5" fill="#22C55E"/>
+  <text x="210" y="370" font-family="monospace" font-size="12" fill="#777">ENGINEERING ARTIFACT // SPEC</text>
+  
+  <text x="130" y="420" font-family="monospace" font-size="16" fill="#B6FF5C">apiVersion: core.axion.tech/v1alpha1 kind: MultiRegionCluster</text>
+  <text x="130" y="455" font-family="monospace" font-size="15" fill="#D1D5DB">spec.regions: [ 'ap-south-1', 'eu-central-1', 'us-east-1' ]</text>
+  <text x="130" y="490" font-family="monospace" font-size="15" fill="#9CA3AF">healthProbe.failover({ target: 'auto_drain', maxRTO: '45s' });</text>
+  <text x="130" y="525" font-family="monospace" font-size="14" fill="#6B7280">State: RECONCILED_GLOBALLY_STABLE</text>
+</svg>

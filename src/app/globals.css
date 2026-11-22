@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #101010;
+    --bg-secondary: #181818;
+    --bg-elevated: #1e1e1e;
+    --text-primary: #F5F3EF;
+    --text-secondary: #A5A5A5;
+    --text-muted: #6B7280;
+    --accent: #B6FF5C;
+    --border-color: #303030;
+    --border-subtle: #222222;
+  }
+
+  * {
+    border-color: var(--border-color);
+  }
+
+  ::selection {
+    background-color: #B6FF5C;
+    color: #101010;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #101010;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B6FF5C;
+}
+
+/* Swiss Editorial Grid Texture */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.bg-dot-pattern {
+  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+}
+
+/* Technical Crosshair Decoration */
+.tech-crosshair {
+  position: relative;
+}
+.tech-crosshair::before {
+  content: "+";
+  position: absolute;
+  font-family: monospace;
+  font-size: 14px;
+  color: #B6FF5C;
+  line-height: 1;
+}
+
+/* Brutalist Accent Glow */
+.accent-glow {
+  text-shadow: 0 0 20px rgba(182, 255, 92, 0.4);
+}
+
+/* Sharp focus state for accessibility */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid #B6FF5C;
+  outline-offset: 2px;
+}

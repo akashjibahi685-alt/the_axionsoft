@@ -1,0 +1,63 @@
+# Docker Compose configuration for Axion Technologies Production Deployment
+version: '3.8'
+
+services:
+  # Next.js Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://axion_user:axion_secure_pass_2026@postgres:5432/axion_production?schema=public
+      - JWT_SECRET=axion-enterprise-production-jwt-key-2026-b92e71c99f
+      - PORT=3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - axion_internal_network
+    ports:
+      - "127.0.0.1:3000:3000"
+
+  # PostgreSQL Production Database
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: axion_user
+      POSTGRES_PASSWORD: axion_secure_pass_2026
+      POSTGRES_DB: axion_production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - axion_internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U axion_user -d axion_production"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Nginx Reverse Proxy & SSL Termination
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - web
+    networks:
+      - axion_internal_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  axion_internal_network:
+    driver: bridge
