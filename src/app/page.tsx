@@ -5,6 +5,7 @@ import { ArrowUpRight, ArrowRight, ShieldCheck, Cpu, Code2, Globe, Smartphone, C
 import { prisma } from "@/lib/prisma";
 import { getCompanySettings } from "@/lib/settings";
 import { ArtemiiHero } from "@/components/sections/ArtemiiHero";
+import { WebInMotionGallery } from "@/components/sections/WebInMotionGallery";
 import { Footer } from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/Badge";
 
@@ -144,6 +145,11 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ========================================================= */}
+        {/* INTERACTIVE 3D PERSPECTIVE SHOWCASE (WEB, IN MOTION)      */}
+        {/* ========================================================= */}
+        <WebInMotionGallery />
 
         {/* SELECTED WORK (CASE STUDIES) */}
         <section className="py-20 border-b border-[#262626]">
