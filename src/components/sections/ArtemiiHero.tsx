@@ -295,6 +295,27 @@ export function ArtemiiHero({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Subtle Acoustic Click Tone for Table & Button interactions
+  const playHoverClick = () => {
+    if (!audioActive) return;
+    try {
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = audioCtxRef.current || new AudioCtx();
+      audioCtxRef.current = ctx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      gain.gain.setValueAtTime(0.015, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.04);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.04);
+    } catch {}
+  };
+
   // Web Audio Synth Bleep for Click & Hold
   const playTactileTone = () => {
     try {
@@ -611,7 +632,10 @@ export function ArtemiiHero({
                   <Link
                     key={proj.title}
                     href={proj.href}
-                    onMouseEnter={() => setActiveProjectIndex(idx)}
+                    onMouseEnter={() => {
+                      setActiveProjectIndex(idx);
+                      playHoverClick();
+                    }}
                     className={`block px-3 py-1.5 text-xs uppercase tracking-wider transition-all select-none ${
                       isActive
                         ? "bg-[#FFFFFF] text-[#000000] font-bold shadow-md transform -translate-x-1"
