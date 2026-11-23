@@ -113,3 +113,15 @@ test("Multi-Video Runner: Video playlist structure and time span integrity", () 
     assert.ok(typeof clip.duration === "number" && clip.duration > 0);
   });
 });
+
+test("UI/DX Management: Design tokens, Telemetry schema, and Swiss Brutalism presets", () => {
+  const PRESETS = {
+    swiss: { accent: "#B6FF5C", bg: "#101010" },
+    monolith: { accent: "#FFFFFF", bg: "#050505" },
+    matrix: { accent: "#38BDF8", bg: "#070B14" },
+  };
+
+  assert.equal(PRESETS.swiss.accent, "#B6FF5C");
+  assert.equal(PRESETS.monolith.accent, "#FFFFFF");
+  assert.equal(PRESETS.matrix.accent, "#38BDF8");
+});

@@ -14,6 +14,7 @@ import {
   Image as ImageIcon,
   Settings,
   ShieldCheck,
+  Palette,
   LogOut,
   ExternalLink,
   Menu,
@@ -50,6 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: "Careers", href: "/admin/careers", icon: Users },
     { label: "Media Assets", href: "/admin/media", icon: ImageIcon },
     { label: "Company Settings", href: "/admin/settings", icon: Settings },
+    { label: "UI / DX Studio", href: "/admin/ui-dx", icon: Palette },
     { label: "Admin Users", href: "/admin/users", icon: ShieldCheck },
   ];
 

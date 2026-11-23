@@ -71,10 +71,16 @@ export default async function AdminDashboardPage() {
             SYSTEM NOMINAL
           </Badge>
           <Link
+            href="/admin/ui-dx"
+            className="px-3.5 py-1.5 bg-[#B6FF5C] border border-[#B6FF5C] hover:bg-[#a5ee49] font-mono text-xs font-bold uppercase text-[#101010] transition-colors"
+          >
+            UI / DX Studio
+          </Link>
+          <Link
             href="/admin/settings"
             className="px-3.5 py-1.5 bg-[#1C1C1C] border border-[#333] hover:border-[#B6FF5C] font-mono text-xs uppercase text-[#CCC] transition-colors"
           >
-            System Settings
+            Settings
           </Link>
         </div>
       </div>
