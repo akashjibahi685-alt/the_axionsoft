@@ -27,21 +27,23 @@ async function main() {
 
   // 2. Default Admin User
   const passwordHash = await bcrypt.hash("Admin@Axion2026!", 10);
-  await prisma.adminUser.upsert({
-    where: { email: "admin@axiontech.in" },
-    update: {
-      passwordHash,
-      roleId: superAdminRole.id,
-    },
-    create: {
-      email: "admin@axiontech.in",
-      name: "Axion Lead Administrator",
-      passwordHash,
-      roleId: superAdminRole.id,
-      isActive: true,
-    },
-  });
-  console.log("✓ Admin user configured: admin@axiontech.in");
+  for (const email of ["admin@axionsoft.solution", "admin@axiontech.in"]) {
+    await prisma.adminUser.upsert({
+      where: { email },
+      update: {
+        passwordHash,
+        roleId: superAdminRole.id,
+      },
+      create: {
+        email,
+        name: "AxionSoft Lead Administrator",
+        passwordHash,
+        roleId: superAdminRole.id,
+        isActive: true,
+      },
+    });
+  }
+  console.log("✓ Admin users configured: admin@axionsoft.solution & admin@axiontech.in");
 
   // 3. Company Settings
   const settings = [
