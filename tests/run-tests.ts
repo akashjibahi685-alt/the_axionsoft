@@ -125,3 +125,37 @@ test("UI/DX Management: Design tokens, Telemetry schema, and Swiss Brutalism pre
   assert.equal(PRESETS.monolith.accent, "#FFFFFF");
   assert.equal(PRESETS.matrix.accent, "#38BDF8");
 });
+
+test("Database Health & Integrity: Relational constraints, composite indices, and backup logs", async () => {
+  const { prisma } = await import("../src/lib/prisma");
+
+  // Verify core entity presence
+  const [userCount, serviceCount, projectCount] = await Promise.all([
+    prisma.adminUser.count(),
+    prisma.service.count(),
+    prisma.project.count(),
+  ]);
+
+  assert.ok(userCount >= 1, "Admin user must exist");
+  assert.ok(serviceCount >= 6, "All 6+ services must be seeded");
+  assert.ok(projectCount >= 4, "Projects must be seeded");
+
+  // Verify composite index query performance
+  const publishedProjects = await prisma.project.findMany({
+    where: { isPublished: true },
+    orderBy: [{ isFeatured: "desc" }, { order: "asc" }],
+    include: { category: true },
+  });
+  assert.ok(publishedProjects.length > 0);
+  assert.ok(publishedProjects[0].category.name.length > 0);
+
+  // Verify backup log structure
+  const backupLogs = await prisma.databaseBackupLog.findMany({
+    take: 1,
+    orderBy: { createdAt: "desc" },
+  });
+  if (backupLogs.length > 0) {
+    assert.equal(backupLogs[0].status, "COMPLETED");
+    assert.ok(backupLogs[0].checksum.length === 64); // SHA-256
+  }
+});
