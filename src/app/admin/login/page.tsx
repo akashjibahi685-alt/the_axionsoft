@@ -52,7 +52,7 @@ function LoginForm() {
             ADMIN CONSOLE // AUTH GATE
           </span>
           <h1 className="text-2xl font-black uppercase tracking-tight text-[#F5F3EF]">
-            Axion Technologies
+            AxionSoft Solution
           </h1>
           <p className="text-xs text-[#888888]">
             Restricted access for authorized systems administrators only.

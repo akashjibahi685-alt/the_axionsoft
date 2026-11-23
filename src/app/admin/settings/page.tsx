@@ -10,7 +10,7 @@ export default function AdminSettingsPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [settings, setSettings] = useState({
-    company_name: "AXION TECHNOLOGIES",
+    company_name: "AXIONSOFT SOLUTION",
     company_tagline: "WE BUILD WHAT'S NEXT.",
     company_mission: "Transform complex ideas into useful, intelligent, scalable and secure digital products.",
     company_vision: "Become a trusted technology partner for businesses, startups and organizations by delivering innovative software, AI solutions and secure digital infrastructure.",

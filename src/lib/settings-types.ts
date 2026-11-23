@@ -23,7 +23,7 @@ export interface CompanySettingsData {
 }
 
 export const DEFAULT_SETTINGS: CompanySettingsData = {
-  companyName: "AXION TECHNOLOGIES",
+  companyName: "AXIONSOFT SOLUTION",
   tagline: "WE BUILD WHAT'S NEXT.",
   mission: "Transform complex ideas into useful, intelligent, scalable and secure digital products.",
   vision: "Become a trusted technology partner for businesses, startups and organizations by delivering innovative software, AI solutions and secure digital infrastructure.",

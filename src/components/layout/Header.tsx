@@ -10,7 +10,7 @@ interface HeaderProps {
   tagline?: string;
 }
 
-export function Header({ companyName = "AXION TECHNOLOGIES" }: HeaderProps) {
+export function Header({ companyName = "AXIONSOFT SOLUTION" }: HeaderProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);

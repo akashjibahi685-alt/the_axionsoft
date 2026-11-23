@@ -130,7 +130,7 @@ export default async function HomePage() {
               </div>
               <div className="lg:col-span-8 space-y-6 text-[#A5A5A5] text-sm sm:text-base leading-relaxed">
                 <p>
-                  <strong className="text-[#F5F3EF]">Who we are:</strong> Axion Technologies is an independent software engineering, artificial intelligence, and cybersecurity technology studio operating from India and delivering for forward-thinking enterprises worldwide.
+                  <strong className="text-[#F5F3EF]">Who we are:</strong> AxionSoft Solution is an independent software engineering, artificial intelligence, and cybersecurity technology studio operating from India and delivering for forward-thinking enterprises worldwide.
                 </p>
                 <p>
                   <strong className="text-[#F5F3EF]">What we build:</strong> Mission-critical distributed systems, deterministic Retrieval-Augmented Generation (RAG) agent platforms, high-concurrency web platforms, native cross-platform mobile apps, and authorized defensive cybersecurity defenses.
@@ -492,7 +492,7 @@ export default async function HomePage() {
               &ldquo;Software should be mathematically resilient, visually undeniable, and architected to withstand the adversarial realities of production.&rdquo;
             </blockquote>
             <p className="font-mono text-xs text-[#666666] uppercase tracking-widest">
-              AXION TECHNOLOGIES // PRINCIPLE #01
+              AXIONSOFT SOLUTION // PRINCIPLE #01
             </p>
           </div>
         </section>

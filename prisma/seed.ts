@@ -45,7 +45,7 @@ async function main() {
 
   // 3. Company Settings
   const settings = [
-    { key: "company_name", value: "AXION TECHNOLOGIES", description: "Official business trade name" },
+    { key: "company_name", value: "AXIONSOFT SOLUTION", description: "Official business trade name" },
     { key: "company_tagline", value: "WE BUILD WHAT'S NEXT.", description: "Brand motto and primary tagline" },
     { key: "company_mission", value: "Transform complex ideas into useful, intelligent, scalable and secure digital products.", description: "Core enterprise mission" },
     { key: "company_vision", value: "Become a trusted technology partner for businesses, startups and organizations by delivering innovative software, AI solutions and secure digital infrastructure.", description: "Long-term vision" },

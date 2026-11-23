@@ -41,7 +41,7 @@ function createGeometricSvg(title: string, subtitle: string, codeSnippet: string
   <path d="M 1130 615 L 1150 615 M 1140 605 L 1140 625" stroke="${accent}" stroke-width="2"/>
 
   <!-- Brand Label -->
-  <text x="100" y="110" font-family="monospace" font-size="14" fill="${accent}" letter-spacing="3">AXION TECHNOLOGIES // SYS-ENG</text>
+  <text x="100" y="110" font-family="monospace" font-size="14" fill="${accent}" letter-spacing="3">AXIONSOFT SOLUTION // SYS-ENG</text>
   <text x="1050" y="110" text-anchor="end" font-family="monospace" font-size="14" fill="#666" letter-spacing="2">REV 2026.04</text>
 
   <!-- Editorial typography -->

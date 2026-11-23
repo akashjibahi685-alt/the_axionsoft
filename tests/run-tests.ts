@@ -92,7 +92,7 @@ test("Form Validation & Anti-Spam: Inquiry Zod schema enforcement", () => {
 });
 
 test("Configuration Engine: Company settings fallback integrity", async () => {
-  assert.equal(DEFAULT_SETTINGS.companyName, "AXION TECHNOLOGIES");
+  assert.equal(DEFAULT_SETTINGS.companyName, "AXIONSOFT SOLUTION");
   assert.equal(DEFAULT_SETTINGS.tagline, "WE BUILD WHAT'S NEXT.");
   assert.equal(DEFAULT_SETTINGS.brandAccent, "#B6FF5C");
   assert.equal(DEFAULT_SETTINGS.brandBg, "#101010");

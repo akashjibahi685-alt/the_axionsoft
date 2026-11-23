@@ -1,4 +1,4 @@
-# AXION TECHNOLOGIES — ENVIRONMENT CONFIGURATION
+# AXIONSOFT SOLUTION — ENVIRONMENT CONFIGURATION
 
 This document details all environment variables supported by the Axion Technologies application.
 

@@ -65,7 +65,7 @@ export default async function AboutPage() {
               ENGINEERING DIGITAL INFRASTRUCTURE FOR THE NEXT ERA.
             </h1>
             <p className="text-base sm:text-lg text-[#A5A5A5] max-w-2xl mt-6 leading-relaxed">
-              Axion Technologies operates at the intersection of rigorous systems engineering, production-grade artificial intelligence, and proactive defensive security.
+              AxionSoft Solution operates at the intersection of rigorous systems engineering, production-grade artificial intelligence, and proactive defensive security.
             </p>
           </div>
         </section>
@@ -190,7 +190,7 @@ export default async function AboutPage() {
                   Rooted in India, Delivering Globally
                 </h2>
                 <p className="text-xs sm:text-sm text-[#A5A5A5] leading-relaxed">
-                  Headquartered in the technology hub of Bengaluru, India, Axion Technologies provides round-the-clock engineering coverage for clients across North America, Europe, Asia-Pacific, and the Middle East.
+                  Headquartered in the technology hub of Bengaluru, India, AxionSoft Solution provides round-the-clock engineering coverage for clients across North America, Europe, Asia-Pacific, and the Middle East.
                 </p>
                 <div className="font-mono text-xs space-y-1 pt-2">
                   <div className="text-[#CCC]">HQ: {settings.officeLocation}</div>

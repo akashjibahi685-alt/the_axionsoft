@@ -304,7 +304,7 @@ export function ContactForm() {
           className="mt-1 w-4 h-4 rounded-none accent-[#B6FF5C] bg-[#1A1A1A] border-[#303030] cursor-pointer"
         />
         <label htmlFor="consent" className="text-xs text-[#888888] leading-relaxed cursor-pointer select-none">
-          I consent to Axion Technologies storing and processing my submitted business information according to the{" "}
+          I consent to AxionSoft Solution storing and processing my submitted business information according to the{" "}
           <a href="/privacy" target="_blank" className="text-[#B6FF5C] hover:underline">
             Privacy Policy
           </a>

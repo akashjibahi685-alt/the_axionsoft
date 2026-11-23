@@ -79,7 +79,7 @@ export default function AdminUiDxPage() {
   const [telemetryWave, setTelemetryWave] = useState(true);
 
   // SEO & Social State
-  const [metaTitle, setMetaTitle] = useState("AXION TECHNOLOGIES // WE BUILD WHAT'S NEXT");
+  const [metaTitle, setMetaTitle] = useState("AXIONSOFT SOLUTION // WE BUILD WHAT'S NEXT");
   const [metaDescription, setMetaDescription] = useState(
     "Independent IT, software engineering, cognitive AI, and cybersecurity technology company."
   );
@@ -640,7 +640,7 @@ export default function AdminUiDxPage() {
                 <div className="grid grid-cols-12 gap-2 pb-5 border-b border-[#000000]">
                   <div className="col-span-6 space-y-1">
                     <h3 className="font-bold text-xs uppercase tracking-tight text-[#000000] leading-none">
-                      AXION TECHNOLOGIES
+                      AXIONSOFT SOLUTION
                     </h3>
                     <p className="text-[10px] text-[#444444] uppercase tracking-wider font-sans">
                       IT &amp; COGNITIVE AI STUDIO

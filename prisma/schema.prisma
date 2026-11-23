@@ -1,4 +1,4 @@
-// Prisma Schema for AXION TECHNOLOGIES
+// Prisma Schema for AXIONSOFT SOLUTION
 // Production-ready relational schema supporting PostgreSQL & SQLite
 
 generator client {

@@ -1,4 +1,4 @@
-// Production PostgreSQL Prisma Schema for AXION TECHNOLOGIES
+// Production PostgreSQL Prisma Schema for AXIONSOFT SOLUTION
 
 generator client {
   provider = "prisma-client-js"
