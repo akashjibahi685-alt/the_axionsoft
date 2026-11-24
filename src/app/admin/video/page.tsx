@@ -19,8 +19,6 @@ import {
   RefreshCw,
   Clock,
   Sliders,
-  AlertTriangle,
-  RotateCcw,
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 
@@ -30,18 +28,17 @@ interface VideoClip {
   duration: number; // in seconds
 }
 
-const DEFAULT_LOCAL_PRESETS: VideoClip[] = [
-  { title: "HARDWARE // SWITCH LOGIC", src: "/videos/clip1-hardware.mp4", duration: 6 },
-  { title: "NEURAL // TENSOR GRAPH", src: "/videos/clip2-neural.mp4", duration: 6 },
-  { title: "MAINFRAME // CLOUD CLUSTER", src: "/videos/clip3-server.mp4", duration: 6 },
-  { title: "DISTRIBUTED // PIPELINE", src: "/videos/clip4-code.mp4", duration: 6 },
-  { title: "TELEMETRY // RUNTIME CORE", src: "/videos/hero.mp4", duration: 6 },
+// User's custom video clips as primary configuration
+const INITIAL_CUSTOM_CLIPS: VideoClip[] = [
+  { title: "the second", src: "https://www.pexels.com/download/video/34645214/", duration: 6 },
+  { title: "the nes", src: "https://www.pexels.com/download/video/8979563/", duration: 4 },
+  { title: "the first", src: "https://www.pexels.com/download/video/37613442/", duration: 5 },
 ];
 
 export default function AdminVideoPage() {
-  const [playlist, setPlaylist] = useState<VideoClip[]>(DEFAULT_LOCAL_PRESETS);
-  const [fallbackUrl, setFallbackUrl] = useState("/videos/hero.mp4");
-  const [defaultSpan, setDefaultSpan] = useState(6);
+  const [playlist, setPlaylist] = useState<VideoClip[]>(INITIAL_CUSTOM_CLIPS);
+  const [fallbackUrl, setFallbackUrl] = useState("https://www.pexels.com/download/video/34645214/");
+  const [defaultSpan, setDefaultSpan] = useState(5);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -50,20 +47,19 @@ export default function AdminVideoPage() {
   const [activeClipIndex, setActiveClipIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [previewSlot, setPreviewSlot] = useState<"A" | "B">("A");
-  const [slotASrc, setSlotASrc] = useState<string>(DEFAULT_LOCAL_PRESETS[0].src);
-  const [slotBSrc, setSlotBSrc] = useState<string>(DEFAULT_LOCAL_PRESETS[1]?.src || DEFAULT_LOCAL_PRESETS[0].src);
+  const [slotASrc, setSlotASrc] = useState<string>(INITIAL_CUSTOM_CLIPS[0].src);
+  const [slotBSrc, setSlotBSrc] = useState<string>(INITIAL_CUSTOM_CLIPS[1]?.src || INITIAL_CUSTOM_CLIPS[0].src);
   const [timeRemaining, setTimeRemaining] = useState(defaultSpan);
 
   const videoRefA = useRef<HTMLVideoElement | null>(null);
   const videoRefB = useRef<HTMLVideoElement | null>(null);
 
-  // New Clip Modal / Inline Form State
+  // New Clip Modal
   const [showAddModal, setShowAddModal] = useState(false);
-  const [replaceExisting, setReplaceExisting] = useState(false);
   const [newClip, setNewClip] = useState<VideoClip>({
     title: "",
-    src: "/videos/hero.mp4",
-    duration: 6,
+    src: "",
+    duration: 5,
   });
 
   const loadSettings = async () => {
@@ -91,7 +87,7 @@ export default function AdminVideoPage() {
         }
 
         if (map.hero_video_url) setFallbackUrl(map.hero_video_url);
-        if (map.hero_clip_span) setDefaultSpan(parseInt(map.hero_clip_span, 10) || 6);
+        if (map.hero_clip_span) setDefaultSpan(parseInt(map.hero_clip_span, 10) || 5);
       }
     } catch (e) {
       console.error("Error loading video settings:", e);
@@ -119,7 +115,6 @@ export default function AdminVideoPage() {
     const interval = setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev <= 1) {
-          // Advance to next clip with crossfade
           const nextIndex = (activeClipIndex + 1) % playlist.length;
           const nextClip = playlist[nextIndex];
 
@@ -191,51 +186,18 @@ export default function AdminVideoPage() {
   };
 
   const removeClip = (index: number) => {
-    if (playlist.length <= 1) {
-      alert("At least one video clip must remain. Use 'Clear All Default Videos' to set your single custom video.");
-      return;
-    }
     const updated = playlist.filter((_, i) => i !== index);
     setPlaylist(updated);
     if (activeClipIndex >= updated.length) {
       setActiveClipIndex(0);
     }
-    showToast("Clip removed. Click 'Save & Deploy to Home' to apply permanently.");
+    showToast("Clip removed. Click 'Save Video Changes' to permanently save.");
   };
 
   const updateClip = (index: number, field: keyof VideoClip, value: string | number) => {
     const updated = [...playlist];
     updated[index] = { ...updated[index], [field]: value };
     setPlaylist(updated);
-  };
-
-  const handleClearDefaults = () => {
-    if (
-      confirm(
-        "Remove all 5 default sample videos and keep only a single custom video?\n\nThis will remove the default hardware, neural, server, and code clips."
-      )
-    ) {
-      const singleCustom: VideoClip = {
-        title: "CORE // ENTERPRISE VIDEO RUNNER",
-        src: fallbackUrl || "/videos/hero.mp4",
-        duration: defaultSpan,
-      };
-      setPlaylist([singleCustom]);
-      setActiveClipIndex(0);
-      setSlotASrc(singleCustom.src);
-      setSlotBSrc(singleCustom.src);
-      showToast("Default videos removed! Click 'Save & Deploy to Home' to make it permanent.");
-    }
-  };
-
-  const handleRestoreDefaults = () => {
-    if (confirm("Restore the 5 factory default sample video clips?")) {
-      setPlaylist(DEFAULT_LOCAL_PRESETS);
-      setActiveClipIndex(0);
-      setSlotASrc(DEFAULT_LOCAL_PRESETS[0].src);
-      setSlotBSrc(DEFAULT_LOCAL_PRESETS[1]?.src || DEFAULT_LOCAL_PRESETS[0].src);
-      showToast("Factory default clips restored. Click 'Save & Deploy to Home' to apply.");
-    }
   };
 
   const handleAddClip = (e: React.FormEvent) => {
@@ -251,25 +213,18 @@ export default function AdminVideoPage() {
       duration: Number(newClip.duration) || defaultSpan,
     };
 
-    if (replaceExisting) {
-      // Replace all existing default videos with ONLY this new video
-      setPlaylist([clipToAdd]);
-      setFallbackUrl(clipToAdd.src);
-      setSlotASrc(clipToAdd.src);
-      setSlotBSrc(clipToAdd.src);
-      setActiveClipIndex(0);
-      showToast("Default videos removed! Custom video set as the sole hero video.");
-    } else {
-      setPlaylist([...playlist, clipToAdd]);
-      showToast("New video clip added to sequence.");
-    }
-
-    setNewClip({ title: "", src: "/videos/hero.mp4", duration: defaultSpan });
-    setReplaceExisting(false);
+    setPlaylist([...playlist, clipToAdd]);
+    setNewClip({ title: "", src: "", duration: defaultSpan });
     setShowAddModal(false);
+    showToast("Video added! Click 'Save Video Changes' to permanently apply.");
   };
 
   const saveSettings = async () => {
+    if (playlist.length === 0) {
+      alert("Please add at least one video clip before saving.");
+      return;
+    }
+
     setSaving(true);
     try {
       const targetFallback = playlist[0]?.src || fallbackUrl;
@@ -288,7 +243,7 @@ export default function AdminVideoPage() {
       });
 
       if (res.ok) {
-        showToast("PERMANENTLY SAVED! Live landing page updated with your custom video(s).");
+        showToast("PERMANENTLY SAVED! Live landing page updated with your videos.");
       } else {
         const err = await res.json();
         alert(err.error || "Failed to save video sequence");
@@ -305,14 +260,6 @@ export default function AdminVideoPage() {
   const totalCycleTime = useMemo(() => {
     return playlist.reduce((acc, c) => acc + (Number(c.duration) || defaultSpan), 0);
   }, [playlist, defaultSpan]);
-
-  const hasOnlyCustomVideos = useMemo(() => {
-    return !playlist.some((p) =>
-      ["clip1-hardware.mp4", "clip2-neural.mp4", "clip3-server.mp4", "clip4-code.mp4"].some((name) =>
-        p.src.includes(name)
-      )
-    );
-  }, [playlist]);
 
   return (
     <div className="space-y-6">
@@ -357,34 +304,10 @@ export default function AdminVideoPage() {
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#B6FF5C] text-[#101010] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#a3f044] transition-all disabled:opacity-50"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            <span>Permanently Save &amp; Apply</span>
+            <span>Save Video Changes</span>
           </button>
         </div>
       </div>
-
-      {/* Status Alert Banner */}
-      {hasOnlyCustomVideos ? (
-        <div className="p-3 bg-emerald-950/20 border border-emerald-800 text-emerald-300 font-mono text-xs flex items-center justify-between">
-          <span className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span>CUSTOM VIDEO ACTIVE: All factory default video clips have been removed.</span>
-          </span>
-          <span className="text-[10px] text-emerald-400 font-bold">100% CUSTOM PLAYLIST</span>
-        </div>
-      ) : (
-        <div className="p-3 bg-amber-950/20 border border-amber-800/80 text-amber-200 font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <span className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
-            <span>Default sample clips are currently present. You can remove them to show only your custom video.</span>
-          </span>
-          <button
-            onClick={handleClearDefaults}
-            className="px-3 py-1 bg-amber-400 text-[#101010] font-bold text-[11px] uppercase hover:bg-amber-300 transition-colors w-fit"
-          >
-            Remove All Defaults Now
-          </button>
-        </div>
-      )}
 
       {/* Metrics Bar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -564,151 +487,160 @@ export default function AdminVideoPage() {
                 </h3>
               </div>
 
-              <div className="flex items-center gap-2 flex-wrap">
+              {/* ACTION BUTTONS: ADD CLIP & SAVE PLAYLIST RIGHT HERE */}
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={handleClearDefaults}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-red-800/80 bg-red-950/20 text-red-300 font-mono text-[11px] hover:bg-red-900/30 transition-colors"
-                  title="Remove all default sample clips"
-                >
-                  <Trash2 className="w-3 h-3 text-red-400" />
-                  <span>Remove Defaults</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleRestoreDefaults}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-[#333] bg-[#181818] text-[#888] hover:text-[#CCC] font-mono text-[11px]"
-                  title="Restore 5 factory default clips"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                  <span>Restore Defaults</span>
-                </button>
-
-                <button
                   onClick={() => {
                     setNewClip({ title: "", src: "", duration: defaultSpan });
-                    setReplaceExisting(false);
                     setShowAddModal(true);
                   }}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#B6FF5C] text-[#101010] font-mono text-[11px] font-bold uppercase hover:bg-[#a3f044]"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#222] border border-[#333] text-[#F5F3EF] hover:border-[#B6FF5C] font-mono text-xs font-bold uppercase transition-colors"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Add Video</span>
+                  <Plus className="w-3.5 h-3.5 text-[#B6FF5C]" />
+                  <span>+ Add Video Clip</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={saveSettings}
+                  disabled={saving}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#B6FF5C] text-[#101010] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#a3f044] transition-all disabled:opacity-50 shadow-md"
+                >
+                  {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                  <span>Save Playlist</span>
                 </button>
               </div>
             </div>
 
             {/* Video Cards List */}
-            <div className="space-y-3">
-              {playlist.map((clip, idx) => {
-                const isActive = idx === activeClipIndex;
-                return (
-                  <div
-                    key={idx}
-                    className={`p-4 border transition-colors ${
-                      isActive
-                        ? "border-[#B6FF5C] bg-[#191919]"
-                        : "border-[#262626] bg-[#161616] hover:border-[#383838]"
-                    }`}
-                  >
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <span className="w-6 h-6 bg-[#222] text-[#B6FF5C] font-mono text-[10px] font-bold flex items-center justify-center flex-shrink-0">
-                          {idx + 1}
-                        </span>
+            {playlist.length === 0 ? (
+              <div className="p-12 text-center border border-dashed border-[#333] space-y-3 font-mono text-xs">
+                <div className="text-[#888]">NO VIDEO CLIPS IN SEQUENCE.</div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNewClip({ title: "", src: "", duration: defaultSpan });
+                    setShowAddModal(true);
+                  }}
+                  className="px-4 py-2 bg-[#B6FF5C] text-[#101010] font-bold uppercase"
+                >
+                  + Add Your First Video
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {playlist.map((clip, idx) => {
+                  const isActive = idx === activeClipIndex;
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-4 border transition-colors ${
+                        isActive
+                          ? "border-[#B6FF5C] bg-[#191919]"
+                          : "border-[#262626] bg-[#161616] hover:border-[#383838]"
+                      }`}
+                    >
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <span className="w-6 h-6 bg-[#222] text-[#B6FF5C] font-mono text-[10px] font-bold flex items-center justify-center flex-shrink-0">
+                            {idx + 1}
+                          </span>
 
-                        <div className="flex-1 min-w-0 space-y-1">
-                          <input
-                            type="text"
-                            value={clip.title}
-                            onChange={(e) => updateClip(idx, "title", e.target.value)}
-                            className="w-full bg-[#1F1F1F] border border-[#333] text-[#F5F3EF] px-2.5 py-1 text-xs font-mono font-bold focus:border-[#B6FF5C] outline-none"
-                            placeholder="Clip Title..."
-                          />
-
-                          <div className="flex items-center gap-2">
+                          <div className="flex-1 min-w-0 space-y-1">
                             <input
                               type="text"
-                              value={clip.src}
-                              onChange={(e) => updateClip(idx, "src", e.target.value)}
-                              className="flex-1 bg-[#1A1A1A] border border-[#2B2B2B] text-[#888] px-2 py-0.5 text-[10px] font-mono outline-none focus:text-[#CCC]"
-                              placeholder="/videos/... or https://..."
+                              value={clip.title}
+                              onChange={(e) => updateClip(idx, "title", e.target.value)}
+                              className="w-full bg-[#1F1F1F] border border-[#333] text-[#F5F3EF] px-2.5 py-1 text-xs font-mono font-bold focus:border-[#B6FF5C] outline-none"
+                              placeholder="Clip Title..."
                             />
-                            <a
-                              href={clip.src}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-[#666] hover:text-[#B6FF5C]"
-                              title="Test direct video URL in new tab"
-                            >
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
+
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                value={clip.src}
+                                onChange={(e) => updateClip(idx, "src", e.target.value)}
+                                className="flex-1 bg-[#1A1A1A] border border-[#2B2B2B] text-[#888] px-2 py-0.5 text-[10px] font-mono outline-none focus:text-[#CCC]"
+                                placeholder="https://... or /videos/..."
+                              />
+                              <a
+                                href={clip.src}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[#666] hover:text-[#B6FF5C]"
+                                title="Test direct video URL in new tab"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center gap-3 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-2 sm:pt-0 border-[#222]">
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3 text-[#666]" />
-                          <input
-                            type="number"
-                            min="1"
-                            max="60"
-                            value={clip.duration}
-                            onChange={(e) => updateClip(idx, "duration", Number(e.target.value))}
-                            className="w-12 bg-[#1A1A1A] border border-[#333] text-[#B6FF5C] text-xs font-mono px-1 py-0.5 text-center"
-                          />
-                          <span className="text-[10px] font-mono text-[#888]">s</span>
-                        </div>
+                        <div className="flex items-center gap-3 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-2 sm:pt-0 border-[#222]">
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-[#666]" />
+                            <input
+                              type="number"
+                              min="1"
+                              max="60"
+                              value={clip.duration}
+                              onChange={(e) => updateClip(idx, "duration", Number(e.target.value))}
+                              className="w-12 bg-[#1A1A1A] border border-[#333] text-[#B6FF5C] text-xs font-mono px-1 py-0.5 text-center"
+                            />
+                            <span className="text-[10px] font-mono text-[#888]">s</span>
+                          </div>
 
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => moveClip(idx, "up")}
-                            disabled={idx === 0}
-                            className="p-1 border border-[#333] text-[#888] hover:text-[#F5F3EF] disabled:opacity-20"
-                            title="Move Up"
-                          >
-                            <ArrowUp className="w-3 h-3" />
-                          </button>
-                          <button
-                            onClick={() => moveClip(idx, "down")}
-                            disabled={idx === playlist.length - 1}
-                            className="p-1 border border-[#333] text-[#888] hover:text-[#F5F3EF] disabled:opacity-20"
-                            title="Move Down"
-                          >
-                            <ArrowDown className="w-3 h-3" />
-                          </button>
-                          {playlist.length > 1 && (
+                          <div className="flex items-center gap-1">
                             <button
+                              type="button"
+                              onClick={() => moveClip(idx, "up")}
+                              disabled={idx === 0}
+                              className="p-1 border border-[#333] text-[#888] hover:text-[#F5F3EF] disabled:opacity-20"
+                              title="Move Up"
+                            >
+                              <ArrowUp className="w-3 h-3" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => moveClip(idx, "down")}
+                              disabled={idx === playlist.length - 1}
+                              className="p-1 border border-[#333] text-[#888] hover:text-[#F5F3EF] disabled:opacity-20"
+                              title="Move Down"
+                            >
+                              <ArrowDown className="w-3 h-3" />
+                            </button>
+                            <button
+                              type="button"
                               onClick={() => removeClip(idx)}
                               className="p-1 border border-red-900/40 text-red-400 hover:bg-red-900/20"
-                              title="Remove Clip"
+                              title="Remove Video Clip"
                             >
                               <Trash2 className="w-3 h-3" />
                             </button>
-                          )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
 
-            {/* Save Button Prominent */}
-            <div className="pt-4 border-t border-[#222] flex items-center justify-between">
-              <span className="font-mono text-[10px] text-[#777]">
-                * Click save to update SQLite database and edge cache immediately.
+            {/* Bottom Save Bar */}
+            <div className="pt-4 border-t border-[#222] flex flex-col sm:flex-row items-center justify-between gap-3">
+              <span className="font-mono text-[11px] text-[#888]">
+                {playlist.length} active clip{playlist.length > 1 ? "s" : ""} configured
               </span>
+
               <button
                 type="button"
                 onClick={saveSettings}
                 disabled={saving}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#B6FF5C] text-[#101010] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#a3f044] transition-all disabled:opacity-50"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#B6FF5C] text-[#101010] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#a3f044] transition-all disabled:opacity-50"
               >
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                <span>Permanently Save Video Settings</span>
+                <span>Save All Videos Permanently</span>
               </button>
             </div>
           </div>
@@ -725,6 +657,7 @@ export default function AdminVideoPage() {
                 <span>Add Landing Page Video Clip</span>
               </h3>
               <button
+                type="button"
                 onClick={() => setShowAddModal(false)}
                 className="text-xs font-mono text-[#888] hover:text-[#fff]"
               >
@@ -740,7 +673,7 @@ export default function AdminVideoPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. AUTONOMOUS // AGENT RUNTIME"
+                  placeholder="e.g. the second"
                   value={newClip.title}
                   onChange={(e) => setNewClip({ ...newClip, title: e.target.value })}
                   className="w-full bg-[#1A1A1A] border border-[#333] text-[#F5F3EF] p-2.5 outline-none focus:border-[#B6FF5C]"
@@ -754,7 +687,7 @@ export default function AdminVideoPage() {
                 <input
                   type="text"
                   required
-                  placeholder="/videos/clip1-hardware.mp4 or https://..."
+                  placeholder="https://www.pexels.com/download/video/... or /videos/..."
                   value={newClip.src}
                   onChange={(e) => setNewClip({ ...newClip, src: e.target.value })}
                   className="w-full bg-[#1A1A1A] border border-[#333] text-[#F5F3EF] p-2.5 outline-none focus:border-[#B6FF5C]"
@@ -775,24 +708,6 @@ export default function AdminVideoPage() {
                 />
               </div>
 
-              {/* Checkbox to remove default videos */}
-              <label className="flex items-start gap-3 p-3 bg-[#1A1A1A] border border-[#333] cursor-pointer hover:border-[#B6FF5C]">
-                <input
-                  type="checkbox"
-                  checked={replaceExisting}
-                  onChange={(e) => setReplaceExisting(e.target.checked)}
-                  className="w-4 h-4 mt-0.5 accent-[#B6FF5C]"
-                />
-                <div className="space-y-0.5">
-                  <span className="font-bold text-[#B6FF5C] block">
-                    Remove All Default Videos (Make Sole Hero Video)
-                  </span>
-                  <span className="text-[10px] text-[#888] block">
-                    Check this to permanently discard the 5 default sample clips and keep ONLY this video on the landing page.
-                  </span>
-                </div>
-              </label>
-
               <div className="pt-3 border-t border-[#222] flex justify-end gap-3">
                 <button
                   type="button"
@@ -805,7 +720,7 @@ export default function AdminVideoPage() {
                   type="submit"
                   className="px-5 py-2 bg-[#B6FF5C] text-[#101010] font-bold uppercase hover:bg-[#a3f044]"
                 >
-                  {replaceExisting ? "Set as Sole Video" : "Add To Sequence"}
+                  Add Video To Sequence
                 </button>
               </div>
             </form>
