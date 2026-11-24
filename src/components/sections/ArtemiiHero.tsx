@@ -383,7 +383,7 @@ export function ArtemiiHero({
           className="absolute inset-0 w-full h-full object-cover z-0"
         />
 
-        {/* Video Slot A (Seamless opacity crossfade) */}
+        {/* Video Slot A (Seamless opacity crossfade - high clarity & native quality) */}
         <video
           ref={videoRefA}
           src={slotASrc}
@@ -394,11 +394,11 @@ export function ArtemiiHero({
           preload="auto"
           onLoadedData={() => setSlotALoaded(true)}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 z-10 ${
-            activeSlot === "A" && slotALoaded ? "opacity-45" : "opacity-0"
-          } ${effectsActive ? "filter invert contrast-150" : "filter contrast-125 brightness-80"}`}
+            activeSlot === "A" && slotALoaded ? "opacity-95" : "opacity-0"
+          } ${effectsActive ? "filter invert contrast-150" : ""}`}
         />
 
-        {/* Video Slot B (Seamless opacity crossfade) */}
+        {/* Video Slot B (Seamless opacity crossfade - high clarity & native quality) */}
         <video
           ref={videoRefB}
           src={slotBSrc}
@@ -409,21 +409,12 @@ export function ArtemiiHero({
           preload="auto"
           onLoadedData={() => setSlotBLoaded(true)}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 z-10 ${
-            activeSlot === "B" && slotBLoaded ? "opacity-45" : "opacity-0"
-          } ${effectsActive ? "filter invert contrast-150" : "filter contrast-125 brightness-80"}`}
+            activeSlot === "B" && slotBLoaded ? "opacity-95" : "opacity-0"
+          } ${effectsActive ? "filter invert contrast-150" : ""}`}
         />
 
-        {/* Dark Vignette & Studio Grading Gradients */}
-        <div className="absolute inset-0 bg-radial from-transparent via-[#080808]/70 to-[#040404]/95 z-20" />
-
-        {/* Scanlines Overlay */}
-        <div
-          className="absolute inset-0 z-20 pointer-events-none opacity-25"
-          style={{
-            backgroundImage: "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%)",
-            backgroundSize: "100% 4px",
-          }}
-        />
+        {/* Soft edge shading (preserves full video visibility & original quality) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25 z-20 pointer-events-none" />
       </div>
 
       {/* ========================================================= */}

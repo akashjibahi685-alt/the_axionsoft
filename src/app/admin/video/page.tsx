@@ -360,7 +360,7 @@ export default function AdminVideoPage() {
                 autoPlay
                 loop
                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                  previewSlot === "A" ? "opacity-90" : "opacity-0"
+                  previewSlot === "A" ? "opacity-95" : "opacity-0"
                 }`}
               />
 
@@ -373,7 +373,7 @@ export default function AdminVideoPage() {
                 autoPlay
                 loop
                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                  previewSlot === "B" ? "opacity-90" : "opacity-0"
+                  previewSlot === "B" ? "opacity-95" : "opacity-0"
                 }`}
               />
 
