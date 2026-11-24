@@ -480,20 +480,65 @@ export function ArtemiiHero({
       {/* ========================================================= */}
       <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-8 pt-2 pb-16 min-h-[calc(100vh-140px)] flex flex-col justify-between">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* TOP-LEFT WHITE FLOATING DOSSIER CARD */}
-          <div className="lg:col-span-5 space-y-3">
-            <div className="w-full sm:max-w-md bg-[#FFFFFF] text-[#000000] border border-[#000000] p-6 sm:p-7 shadow-2xl transition-all">
-              <div className="grid grid-cols-12 gap-2 pb-5 border-b border-[#000000]">
+          {/* LEFT: HIGH-CONTRAST INTERACTIVE WORK INDEX / PROJECT LIST */}
+          <div className="lg:col-span-7 flex flex-col justify-center pt-4 lg:pt-8 order-2 lg:order-1">
+            <div className="w-full max-w-xl mr-auto space-y-1.5">
+              <div className="px-3 pb-2 text-[10px] tracking-widest text-[#B6FF5C] uppercase font-mono font-bold flex items-center gap-2">
+                <span className="inline-block w-2 h-2 bg-[#B6FF5C] animate-pulse"></span>
+                <span>CORE DIRECTORY // SELECTED INITIATIVES</span>
+              </div>
+              {projectList.map((proj, idx) => {
+                const isActive = activeProjectIndex === idx;
+                return (
+                  <Link
+                    key={proj.title}
+                    href={proj.href}
+                    onMouseEnter={() => setActiveProjectIndex(idx)}
+                    className={`block px-4 py-2 text-xs uppercase tracking-wider transition-all select-none border ${
+                      isActive
+                        ? "bg-[#FFFFFF] text-[#000000] font-bold shadow-2xl border-white translate-x-1"
+                        : "bg-[#0A0A0A]/85 hover:bg-[#141414]/95 text-[#FFFFFF] hover:text-[#FFFFFF] border-white/20 hover:border-white/50 backdrop-blur-md"
+                    }`}
+                  >
+                    <div className="grid grid-cols-12 items-center">
+                      <div className="col-span-6 truncate font-bold text-sm tracking-wide">
+                        {proj.title}
+                      </div>
+                      <div
+                        className={`col-span-4 text-[11px] uppercase truncate font-medium ${
+                          isActive ? "text-[#111111]" : "text-[#B6FF5C]"
+                        }`}
+                      >
+                        {proj.category}
+                      </div>
+                      <div
+                        className={`col-span-2 text-right text-xs font-mono font-bold ${
+                          isActive ? "text-[#000000]" : "text-[#F5F3EF]"
+                        }`}
+                      >
+                        {proj.year}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* RIGHT: WHITE FLOATING DOSSIER CARD & VIDEO SEQUENCER HUD */}
+          <div className="lg:col-span-5 space-y-3 order-1 lg:order-2 flex flex-col items-start lg:items-end">
+            <div className="w-full sm:max-w-md bg-[#FFFFFF] text-[#000000] border-2 border-[#000000] p-6 sm:p-7 shadow-2xl transition-all">
+              <div className="grid grid-cols-12 gap-2 pb-5 border-b-2 border-[#000000]">
                 <div className="col-span-6 space-y-1">
-                  <h1 className="font-bold text-xs uppercase tracking-tight text-[#000000] leading-none">
+                  <h1 className="font-extrabold text-sm uppercase tracking-tight text-[#000000] leading-none">
                     {companyName}
                   </h1>
-                  <p className="text-[10px] text-[#444444] uppercase tracking-wider">
+                  <p className="text-[10px] text-[#222222] font-semibold uppercase tracking-wider">
                     IT &amp; COGNITIVE AI STUDIO
                   </p>
                 </div>
 
-                <div className="col-span-4 flex flex-col space-y-1 text-[11px] uppercase tracking-wider font-semibold">
+                <div className="col-span-4 flex flex-col space-y-1 text-[11px] uppercase tracking-wider font-bold text-[#000000]">
                   {navItems.map((item) => (
                     <Link
                       key={item.href}
@@ -508,7 +553,7 @@ export function ArtemiiHero({
                 <div className="col-span-2 text-right">
                   <button
                     onClick={scrollToDossier}
-                    className="text-[10px] uppercase font-bold tracking-wider hover:underline"
+                    className="text-[10px] uppercase font-black tracking-wider hover:underline text-[#000000]"
                   >
                     EXPAND
                   </button>
@@ -517,21 +562,21 @@ export function ArtemiiHero({
 
               <div className="pt-4 grid grid-cols-12 gap-2 items-center text-[11px]">
                 <div className="col-span-6 flex items-center gap-2">
-                  <div className="w-5 h-5 bg-[#000000] text-[#FFFFFF] font-bold flex items-center justify-center text-[10px]">
+                  <div className="w-5 h-5 bg-[#000000] text-[#FFFFFF] font-black flex items-center justify-center text-[11px]">
                     7
                   </div>
-                  <span className="text-[10px] uppercase font-bold tracking-wider">
+                  <span className="text-[10px] uppercase font-black tracking-wider text-[#000000]">
                     ONGOING DIVISIONS
                   </span>
                 </div>
 
                 <div className="col-span-6 text-right space-y-0.5">
-                  <span className="text-[9px] uppercase tracking-wider text-[#666666] block">
+                  <span className="text-[9px] uppercase tracking-wider text-[#333333] font-bold block">
                     COMMISSIONS &amp; BRIEFS
                   </span>
                   <a
                     href={`mailto:${contactEmail}`}
-                    className="text-[10px] uppercase font-bold text-[#000000] hover:underline block truncate"
+                    className="text-[10px] uppercase font-black text-[#000000] hover:underline block truncate"
                   >
                     {contactEmail}
                   </a>
@@ -540,88 +585,90 @@ export function ArtemiiHero({
             </div>
 
             {/* ACTION BUTTONS & VIDEO CONTROLLER PILLS */}
-            <div className="pt-2 flex flex-wrap items-center gap-2">
+            <div className="w-full sm:max-w-md pt-2 flex flex-wrap items-center justify-between gap-2">
               <button
                 onClick={scrollToDossier}
-                className="px-3.5 py-1.5 bg-[#FFFFFF] text-[#000000] border border-[#000000] font-bold text-[11px] uppercase tracking-widest hover:bg-[#B6FF5C] transition-colors shadow-lg"
+                className="px-3.5 py-1.5 bg-[#FFFFFF] text-[#000000] border-2 border-[#000000] font-black text-[11px] uppercase tracking-widest hover:bg-[#B6FF5C] transition-colors shadow-lg"
               >
                 SELECTED WORK
               </button>
 
-              {/* Video Play/Pause toggle pill */}
-              <button
-                onClick={toggleVideoPlayback}
-                className="px-2.5 py-1.5 bg-[#141414]/90 backdrop-blur-md text-[#AAAAAA] hover:text-[#FFFFFF] border border-[#333333] font-mono text-[10px] uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors"
-                title="Toggle background video playback"
-              >
-                {isVideoPlaying ? (
-                  <>
-                    <Pause className="w-3 h-3 text-[#B6FF5C]" />
-                    <span>RUNNER ACTIVE</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3 h-3 text-[#FF5522]" />
-                    <span>PAUSED</span>
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Video Play/Pause toggle pill */}
+                <button
+                  onClick={toggleVideoPlayback}
+                  className="px-2.5 py-1.5 bg-[#000000]/90 backdrop-blur-md text-[#FFFFFF] hover:text-[#B6FF5C] border border-white/30 font-mono text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors shadow-md"
+                  title="Toggle background video playback"
+                >
+                  {isVideoPlaying ? (
+                    <>
+                      <Pause className="w-3 h-3 text-[#B6FF5C]" />
+                      <span>RUNNER ACTIVE</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-3 h-3 text-[#FF5522]" />
+                      <span>PAUSED</span>
+                    </>
+                  )}
+                </button>
 
-              {/* Clip Prev/Next Selector */}
-              <div className="inline-flex items-center bg-[#141414]/90 backdrop-blur-md border border-[#333333] text-[10px] font-mono">
-                <button
-                  onClick={jumpToPrevClip}
-                  className="px-1.5 py-1.5 hover:text-[#B6FF5C] hover:bg-[#222] border-r border-[#333] transition-colors"
-                  title="Previous video clip"
-                >
-                  <ChevronLeft className="w-3 h-3" />
-                </button>
-                <span className="px-2 py-1 text-[#CCCCCC] font-bold tracking-wider">
-                  CLIP {String(currentClipIdx + 1).padStart(2, "0")}/{String(playlist.length).padStart(2, "0")}
-                </span>
-                <button
-                  onClick={jumpToNextClip}
-                  className="px-1.5 py-1.5 hover:text-[#B6FF5C] hover:bg-[#222] border-l border-[#333] transition-colors"
-                  title="Next video clip"
-                >
-                  <ChevronRight className="w-3 h-3" />
-                </button>
+                {/* Clip Prev/Next Selector */}
+                <div className="inline-flex items-center bg-[#000000]/90 backdrop-blur-md border border-white/30 text-[10px] font-mono shadow-md">
+                  <button
+                    onClick={jumpToPrevClip}
+                    className="px-1.5 py-1.5 text-white hover:text-[#B6FF5C] hover:bg-[#222] border-r border-white/20 transition-colors"
+                    title="Previous video clip"
+                  >
+                    <ChevronLeft className="w-3 h-3" />
+                  </button>
+                  <span className="px-2 py-1 text-[#FFFFFF] font-black tracking-wider">
+                    CLIP {String(currentClipIdx + 1).padStart(2, "0")}/{String(playlist.length).padStart(2, "0")}
+                  </span>
+                  <button
+                    onClick={jumpToNextClip}
+                    className="px-1.5 py-1.5 text-white hover:text-[#B6FF5C] hover:bg-[#222] border-l border-white/20 transition-colors"
+                    title="Next video clip"
+                  >
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             </div>
 
             {/* MULTI-VIDEO TIME-SPAN SCRUBBER & SEQUENCER HUD */}
-            <div className="w-full sm:max-w-md bg-[#101010]/90 backdrop-blur-md border border-[#2a2a2a] p-3 text-[10px] space-y-2">
-              <div className="flex items-center justify-between text-[#888]">
-                <div className="flex items-center gap-1.5 text-[#B6FF5C] font-semibold truncate">
-                  <Film className="w-3 h-3 flex-shrink-0" />
+            <div className="w-full sm:max-w-md bg-[#000000]/90 backdrop-blur-md border border-white/30 p-3 text-[10px] space-y-2 shadow-2xl">
+              <div className="flex items-center justify-between text-white">
+                <div className="flex items-center gap-1.5 text-[#B6FF5C] font-bold text-xs truncate">
+                  <Film className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="truncate">{currentClip.title}</span>
                 </div>
-                <div className="flex items-center gap-1 text-[#AAA] flex-shrink-0">
-                  <Clock className="w-3 h-3" />
+                <div className="flex items-center gap-1 text-[#FFFFFF] font-mono text-[10px] flex-shrink-0">
+                  <Clock className="w-3 h-3 text-[#B6FF5C]" />
                   <span>{remainingSec}s left</span>
                 </div>
               </div>
 
               {/* Progress Bar Scrubber */}
-              <div className="w-full bg-[#202020] h-1.5 overflow-hidden relative border border-[#333]">
+              <div className="w-full bg-[#222222] h-2 overflow-hidden relative border border-white/30">
                 <div
-                  className="bg-[#B6FF5C] h-full transition-all duration-100 ease-linear"
+                  className="bg-[#B6FF5C] h-full transition-all duration-100 ease-linear shadow-[0_0_8px_#B6FF5C]"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
 
               {/* Time Span Duration Selectors & Direct Clip Jumps */}
-              <div className="flex items-center justify-between pt-1 text-[9px] text-[#777]">
+              <div className="flex items-center justify-between pt-1 text-[9px] text-white">
                 <div className="flex items-center gap-1">
-                  <span>SPAN:</span>
+                  <span className="font-bold text-[#AAAAAA]">SPAN:</span>
                   {[4, 6, 8, 12].map((s) => (
                     <button
                       key={s}
                       onClick={() => setTimeSpan(s)}
-                      className={`px-1.5 py-0.5 border ${
+                      className={`px-1.5 py-0.5 border font-mono font-bold transition-colors ${
                         timeSpan === s
-                          ? "border-[#B6FF5C] text-[#B6FF5C] bg-[#B6FF5C]/10 font-bold"
-                          : "border-[#333] text-[#888] hover:text-[#FFF]"
+                          ? "border-[#B6FF5C] text-[#000000] bg-[#B6FF5C]"
+                          : "border-white/30 text-[#FFFFFF] hover:border-[#B6FF5C] hover:text-[#B6FF5C]"
                       }`}
                     >
                       {s}s
@@ -634,10 +681,10 @@ export function ArtemiiHero({
                     <button
                       key={idx}
                       onClick={() => transitionToNextClip(idx)}
-                      className={`w-4 h-4 flex items-center justify-center border text-[8px] font-bold ${
+                      className={`w-4 h-4 flex items-center justify-center border text-[9px] font-mono font-black transition-all ${
                         currentClipIdx === idx
-                          ? "border-[#FFFFFF] bg-[#FFFFFF] text-[#000000]"
-                          : "border-[#333] text-[#777] hover:border-[#888] hover:text-[#CCC]"
+                          ? "border-[#B6FF5C] bg-[#B6FF5C] text-[#000000]"
+                          : "border-white/30 bg-[#111111] text-[#FFFFFF] hover:border-white hover:text-white"
                       }`}
                     >
                       {idx + 1}
@@ -645,47 +692,6 @@ export function ArtemiiHero({
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* CENTER-RIGHT INTERACTIVE WORK INDEX TABLE */}
-          <div className="lg:col-span-7 flex flex-col justify-center pt-8 lg:pt-16">
-            <div className="w-full max-w-xl ml-auto space-y-1">
-              {projectList.map((proj, idx) => {
-                const isActive = activeProjectIndex === idx;
-                return (
-                  <Link
-                    key={proj.title}
-                    href={proj.href}
-                    onMouseEnter={() => setActiveProjectIndex(idx)}
-                    className={`block px-3 py-1.5 text-xs uppercase tracking-wider transition-all select-none ${
-                      isActive
-                        ? "bg-[#FFFFFF] text-[#000000] font-bold shadow-md transform -translate-x-1"
-                        : "text-[#D1D5DB] hover:text-[#FFFFFF]"
-                    }`}
-                  >
-                    <div className="grid grid-cols-12 items-center">
-                      <div className="col-span-6 truncate font-semibold">
-                        {proj.title}
-                      </div>
-                      <div
-                        className={`col-span-4 text-[11px] uppercase truncate ${
-                          isActive ? "text-[#333333]" : "text-[#777777]"
-                        }`}
-                      >
-                        {proj.category}
-                      </div>
-                      <div
-                        className={`col-span-2 text-right text-[11px] font-mono ${
-                          isActive ? "text-[#000000]" : "text-[#555555]"
-                        }`}
-                      >
-                        {proj.year}
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
             </div>
           </div>
         </div>
