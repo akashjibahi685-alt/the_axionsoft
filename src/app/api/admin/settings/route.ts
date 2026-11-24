@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getAdminSession } from "@/lib/auth";
 
@@ -50,7 +51,19 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true, message: "Settings saved successfully" });
+    // Automatically revalidate landing page and main routes
+    try {
+      revalidatePath("/");
+      revalidatePath("/about");
+      revalidatePath("/work");
+      revalidatePath("/services");
+      revalidatePath("/products");
+      revalidatePath("/insights");
+    } catch (e) {
+      console.warn("Revalidation notice:", e);
+    }
+
+    return NextResponse.json({ success: true, message: "Settings saved and cache revalidated successfully" });
   } catch (error) {
     console.error("Save settings error:", error);
     return NextResponse.json({ error: "Failed to save settings" }, { status: 500 });

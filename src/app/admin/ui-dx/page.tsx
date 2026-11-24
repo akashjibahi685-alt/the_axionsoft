@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import {
   Palette,
   Sliders,
@@ -588,9 +589,17 @@ export default function AdminUiDxPage() {
                 <h2 className="text-xs font-bold text-[#F5F3EF] uppercase tracking-wider">
                   // Registered Active Clips ({videoClips.length})
                 </h2>
-                <Badge variant="accent" dot>
-                  SEQUENCER READY
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/admin/video"
+                    className="text-[10px] text-[#B6FF5C] hover:underline font-mono uppercase"
+                  >
+                    Manage Videos →
+                  </Link>
+                  <Badge variant="accent" dot>
+                    SEQUENCER READY
+                  </Badge>
+                </div>
               </div>
 
               <div className="space-y-2">

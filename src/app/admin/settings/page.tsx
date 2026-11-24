@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Save, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { Save, CheckCircle2, AlertCircle, Loader2, Video, Plus, Trash2, ExternalLink } from "lucide-react";
 
 export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -314,9 +315,19 @@ export default function AdminSettingsPage() {
 
         {/* Hero Background Video & Multi-Video Runner */}
         <div className="space-y-4">
-          <h2 className="font-mono text-xs font-bold text-[#F5F3EF] uppercase tracking-wider border-b border-[#222] pb-2">
-            05 // Multi-Video Background Runner &amp; Sequencer
-          </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#222] pb-2 gap-2">
+            <h2 className="font-mono text-xs font-bold text-[#F5F3EF] uppercase tracking-wider">
+              05 // Multi-Video Background Runner &amp; Sequencer
+            </h2>
+            <Link
+              href="/admin/video"
+              className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#B6FF5C] hover:underline"
+            >
+              <Video className="w-3.5 h-3.5" />
+              <span>Open Dedicated Hero Video Studio →</span>
+            </Link>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-[11px] font-mono text-[#888] uppercase mb-1">
@@ -327,7 +338,7 @@ export default function AdminSettingsPage() {
                 value={settings.hero_video_url}
                 onChange={(e) => setSettings({ ...settings, hero_video_url: e.target.value })}
                 placeholder="/videos/hero.mp4"
-                className="w-full bg-[#181818] border border-[#303030] text-[#F5F3EF] text-sm px-4 py-2.5 font-mono"
+                className="w-full bg-[#181818] border border-[#303030] text-[#F5F3EF] text-sm px-4 py-2.5 font-mono outline-none focus:border-[#B6FF5C]"
               />
             </div>
 
@@ -341,24 +352,129 @@ export default function AdminSettingsPage() {
                 max="60"
                 value={settings.hero_clip_span}
                 onChange={(e) => setSettings({ ...settings, hero_clip_span: e.target.value })}
-                className="w-full bg-[#181818] border border-[#303030] text-[#F5F3EF] text-sm px-4 py-2.5 font-mono"
+                className="w-full bg-[#181818] border border-[#303030] text-[#F5F3EF] text-sm px-4 py-2.5 font-mono outline-none focus:border-[#B6FF5C]"
               />
             </div>
           </div>
 
-          <div>
-            <label className="block text-[11px] font-mono text-[#888] uppercase mb-1">
-              Multi-Video Playlist Configuration (JSON Array of Objects)
-            </label>
-            <textarea
-              rows={6}
-              value={settings.hero_playlist}
-              onChange={(e) => setSettings({ ...settings, hero_playlist: e.target.value })}
-              className="w-full bg-[#181818] border border-[#303030] text-[#B6FF5C] font-mono text-xs p-3 focus:outline-none focus:border-[#B6FF5C]"
-            />
-            <p className="text-[10px] text-[#777] mt-1 font-mono">
-              Configure multiple video clips with custom titles, paths, and durations. The front page cycles through these clips seamlessly with opacity crossfading.
-            </p>
+          {/* Interactive Video Clips Editor */}
+          <div className="border border-[#262626] bg-[#141414] p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-mono font-bold text-[#F5F3EF] uppercase">
+                Active Sequence Clips
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const parsed = JSON.parse(settings.hero_playlist || "[]");
+                    parsed.push({
+                      title: "NEW // VIDEO CLIP",
+                      src: "/videos/hero.mp4",
+                      duration: parseInt(settings.hero_clip_span, 10) || 6,
+                    });
+                    setSettings({ ...settings, hero_playlist: JSON.stringify(parsed, null, 2) });
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
+                className="inline-flex items-center gap-1 text-[10px] font-mono text-[#B6FF5C] hover:underline"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Add Video</span>
+              </button>
+            </div>
+
+            {(() => {
+              let clips: Array<{ title: string; src: string; duration: number }> = [];
+              try {
+                clips = JSON.parse(settings.hero_playlist || "[]");
+              } catch {
+                clips = [];
+              }
+
+              return (
+                <div className="space-y-2">
+                  {clips.map((clip, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3 bg-[#181818] border border-[#262626] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-mono"
+                    >
+                      <div className="flex items-center gap-2 flex-1 w-full sm:w-auto">
+                        <span className="w-5 h-5 bg-[#222] text-[#B6FF5C] flex items-center justify-center text-[10px]">
+                          {idx + 1}
+                        </span>
+                        <input
+                          type="text"
+                          value={clip.title}
+                          onChange={(e) => {
+                            const updated = [...clips];
+                            updated[idx] = { ...updated[idx], title: e.target.value };
+                            setSettings({ ...settings, hero_playlist: JSON.stringify(updated, null, 2) });
+                          }}
+                          className="flex-1 bg-[#1F1F1F] border border-[#333] text-[#F5F3EF] px-2 py-1 text-xs"
+                          placeholder="Clip Title"
+                        />
+                        <input
+                          type="text"
+                          value={clip.src}
+                          onChange={(e) => {
+                            const updated = [...clips];
+                            updated[idx] = { ...updated[idx], src: e.target.value };
+                            setSettings({ ...settings, hero_playlist: JSON.stringify(updated, null, 2) });
+                          }}
+                          className="flex-1 bg-[#1F1F1F] border border-[#333] text-[#A5A5A5] px-2 py-1 text-xs"
+                          placeholder="Video URL / Path"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            min="1"
+                            max="60"
+                            value={clip.duration}
+                            onChange={(e) => {
+                              const updated = [...clips];
+                              updated[idx] = { ...updated[idx], duration: Number(e.target.value) };
+                              setSettings({ ...settings, hero_playlist: JSON.stringify(updated, null, 2) });
+                            }}
+                            className="w-12 bg-[#1F1F1F] border border-[#333] text-[#B6FF5C] px-1 py-1 text-center text-xs"
+                          />
+                          <span className="text-[10px] text-[#888]">s</span>
+                        </div>
+                        {clips.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = clips.filter((_, i) => i !== idx);
+                              setSettings({ ...settings, hero_playlist: JSON.stringify(updated, null, 2) });
+                            }}
+                            className="p-1 text-red-400 hover:text-red-300"
+                            title="Remove Clip"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+
+            <div className="pt-2">
+              <label className="block text-[10px] font-mono text-[#888] uppercase mb-1">
+                Raw JSON Configuration Sync
+              </label>
+              <textarea
+                rows={3}
+                value={settings.hero_playlist}
+                onChange={(e) => setSettings({ ...settings, hero_playlist: e.target.value })}
+                className="w-full bg-[#181818] border border-[#303030] text-[#B6FF5C] font-mono text-[10px] p-2 focus:outline-none focus:border-[#B6FF5C]"
+              />
+            </div>
           </div>
         </div>
 

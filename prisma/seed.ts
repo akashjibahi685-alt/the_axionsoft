@@ -59,6 +59,19 @@ async function main() {
     { key: "social_x", value: "https://x.com/axiontech_in", description: "X / Twitter account" },
     { key: "brand_accent", value: "#B6FF5C", description: "Primary accent color (Electric Lime)" },
     { key: "brand_background", value: "#101010", description: "Dark theme primary background" },
+    { key: "hero_video_url", value: "/videos/hero.mp4", description: "Primary fallback hero video" },
+    { key: "hero_clip_span", value: "6", description: "Default time span per video clip in seconds" },
+    {
+      key: "hero_playlist",
+      value: JSON.stringify([
+        { title: "HARDWARE // SWITCH LOGIC", src: "/videos/clip1-hardware.mp4", duration: 6 },
+        { title: "NEURAL // TENSOR GRAPH", src: "/videos/clip2-neural.mp4", duration: 6 },
+        { title: "MAINFRAME // CLOUD CLUSTER", src: "/videos/clip3-server.mp4", duration: 6 },
+        { title: "DISTRIBUTED // PIPELINE", src: "/videos/clip4-code.mp4", duration: 6 },
+        { title: "TELEMETRY // RUNTIME CORE", src: "/videos/hero.mp4", duration: 6 },
+      ]),
+      description: "Landing page background video playlist sequence",
+    },
   ];
 
   for (const s of settings) {
