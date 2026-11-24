@@ -136,9 +136,9 @@ export function WebInMotionGallery() {
   }, []);
 
   // Responsive circular radius:
-  // Rx = horizontal orbit stretch, Ry = vertical orbit stretch
-  const radiusX = 390;
-  const radiusY = 170;
+  // Using radial orbit (equalized radius for authentic circular movement)
+  const radiusX = 360;
+  const radiusY = 220;
   const cardCount = ORBIT_CARDS.length;
 
   return (
@@ -151,14 +151,14 @@ export function WebInMotionGallery() {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full border border-white/[0.04]"
         style={{
           width: `${radiusX * 2}px`,
-          height: `${radiusY * 2.2}px`,
+          height: `${radiusY * 2}px`,
         }}
       />
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full border border-white/[0.02]"
         style={{
-          width: `${radiusX * 2.3}px`,
-          height: `${radiusY * 2.5}px`,
+          width: `${radiusX * 2.2}px`,
+          height: `${radiusY * 2.2}px`,
         }}
       />
 
@@ -196,7 +196,7 @@ export function WebInMotionGallery() {
 
       {/* CENTER: 3D Continuous Circular Orbit Canvas */}
       <div
-        className="relative z-20 w-full max-w-6xl mx-auto my-auto h-[500px] flex items-center justify-center"
+        className="relative z-20 w-full max-w-6xl mx-auto my-auto h-[520px] flex items-center justify-center"
         style={{ perspective: "1300px" }}
       >
         {/* Center Editorial Typography Headline */}
@@ -219,25 +219,24 @@ export function WebInMotionGallery() {
           // Circular angle for each card
           const cardAngle = angle + (i * 2 * Math.PI) / cardCount;
 
-          // 3D Circular coordinates
+          // 3D Circular coordinates in smooth orbit
           const x = Math.cos(cardAngle) * radiusX;
           const y = Math.sin(cardAngle) * radiusY;
           // Z depth: front cards are higher (z > 0), back cards are lower (z < 0)
-          const z = Math.sin(cardAngle) * 120;
+          const z = Math.sin(cardAngle) * 100;
 
           const isHovered = hoveredCardId === card.id;
 
-          // Natural rotation along the orbital tangent
-          const tangentRotate = Math.sin(cardAngle) * 14;
+          // Gentle tilt along orbital path
+          const tangentRotate = Math.sin(cardAngle) * 8;
 
-          // DEPTH CALCULATIONS:
-          // Normal card scale based on orbit depth
-          const depthScale = 0.88 + ((z + 120) / 240) * 0.22; // 0.88 to 1.10
-          // When hovered: IMMEDIATELY STOP MOTION AND MINIMISE CARD SIZE (as requested: "stop minimise card size")
-          const finalScale = isHovered ? 0.78 : depthScale;
+          // CARD SIZING:
+          // In motion: 1.0 (all cards have the EXACT SAME fixed size and scale, no distortion)
+          // On hover: stops motion and minimises card size to 0.75 cleanly with smooth transition
+          const finalScale = isHovered ? 0.75 : 1.0;
 
-          // Opacity & zIndex based on 3D depth
-          const opacity = isHovered ? 1 : 0.65 + ((z + 120) / 240) * 0.35;
+          // Opacity & zIndex based on depth
+          const opacity = isHovered ? 1 : 0.75 + ((z + 100) / 200) * 0.25;
           const zIndex = isHovered ? 100 : Math.round(z + 200);
 
           return (
@@ -245,7 +244,7 @@ export function WebInMotionGallery() {
               key={card.id}
               onMouseEnter={() => setHoveredCardId(card.id)}
               onMouseLeave={() => setHoveredCardId(null)}
-              className="absolute cursor-pointer select-none transition-all duration-300 ease-out"
+              className="absolute cursor-pointer select-none transition-all duration-300 ease-out will-change-transform"
               style={{
                 transform: `translate3d(${x}px, ${y}px, ${z}px) rotateZ(${tangentRotate}deg) scale(${finalScale})`,
                 zIndex,
@@ -254,14 +253,14 @@ export function WebInMotionGallery() {
             >
               <Link href={card.href} className="block group">
                 <div
-                  className={`w-[290px] sm:w-[330px] rounded-2xl overflow-hidden bg-[#111111]/95 backdrop-blur-xl border transition-all duration-300 shadow-2xl ${
+                  className={`w-[320px] h-[310px] rounded-2xl overflow-hidden bg-[#111111]/95 backdrop-blur-xl border transition-all duration-300 shadow-2xl flex flex-col justify-between ${
                     isHovered
                       ? "border-[#B6FF5C] ring-2 ring-[#B6FF5C]/30 shadow-[0_0_50px_rgba(182,255,92,0.25)]"
                       : "border-[#282828] hover:border-[#444]"
                   }`}
                 >
                   {/* Card Visual Header Mockup */}
-                  <div className="relative aspect-[16/10] w-full bg-[#161616] overflow-hidden p-4 flex flex-col justify-between border-b border-[#242424]">
+                  <div className="relative h-[225px] w-full bg-[#161616] overflow-hidden p-4 flex flex-col justify-between border-b border-[#242424]">
                     {/* Top Tag & Glow Orb */}
                     <div className="flex items-center justify-between z-10">
                       <span className="px-2.5 py-1 bg-[#000000]/80 backdrop-blur-md text-[9px] font-mono text-[#F5F3EF] border border-[#333] uppercase tracking-wider rounded">
@@ -273,13 +272,13 @@ export function WebInMotionGallery() {
                       />
                     </div>
 
-                    {/* Rich Vector / Terminal UI Graphics inside card (Clean, no broken image) */}
-                    <div className="relative z-10 my-auto space-y-1.5 py-2 font-mono">
+                    {/* Rich Vector / Terminal UI Graphics inside card (Fixed height, identical in every card) */}
+                    <div className="relative z-10 my-auto space-y-1.5 py-1 font-mono">
                       <div className="text-[10px] text-[#A5A5A5] font-bold uppercase truncate">
                         {card.title}
                       </div>
                       {card.terminalSnippet && (
-                        <div className="p-2.5 bg-[#090909]/90 border border-[#222] rounded text-[9px] space-y-1">
+                        <div className="p-2.5 bg-[#090909]/90 border border-[#222] rounded text-[9px] space-y-1 h-[76px] flex flex-col justify-center">
                           <div className="text-[#888] truncate">{card.terminalSnippet.code1}</div>
                           <div
                             className="truncate font-semibold"
@@ -309,13 +308,13 @@ export function WebInMotionGallery() {
                     />
                   </div>
 
-                  {/* Card Footer Bar */}
-                  <div className="p-3.5 bg-[#0F0F0F] flex items-center justify-between text-xs">
+                  {/* Card Footer Bar - Fixed height */}
+                  <div className="h-[85px] p-3.5 bg-[#0F0F0F] flex items-center justify-between text-xs">
                     <div className="truncate pr-2">
                       <h3 className="font-bold text-xs uppercase text-[#F5F3EF] group-hover:text-[#B6FF5C] transition-colors tracking-tight truncate">
                         {card.title}
                       </h3>
-                      <p className="text-[9px] text-[#777] truncate">
+                      <p className="text-[9px] text-[#777] truncate mt-0.5">
                         {card.subtitle}
                       </p>
                     </div>
