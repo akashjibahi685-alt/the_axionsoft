@@ -57,8 +57,11 @@ export function ArtemiiHero({
         // Fallback
       }
     }
+    if (heroVideoUrl) {
+      return [{ title: "CORE // RUNTIME", src: heroVideoUrl, duration: heroClipSpan || 6 }];
+    }
     return DEFAULT_PLAYLIST;
-  }, [heroPlaylist]);
+  }, [heroPlaylist, heroVideoUrl, heroClipSpan]);
 
   const [timeStr, setTimeStr] = useState("15:37:45 IST");
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
@@ -74,7 +77,7 @@ export function ArtemiiHero({
   // Dual-slot video references for seamless opacity crossfade
   const [activeSlot, setActiveSlot] = useState<"A" | "B">("A");
   const [slotASrc, setSlotASrc] = useState(playlist[0]?.src || "/videos/hero.mp4");
-  const [slotBSrc, setSlotBSrc] = useState(playlist[1]?.src || "/videos/clip1-hardware.mp4");
+  const [slotBSrc, setSlotBSrc] = useState(playlist[1]?.src || playlist[0]?.src || "/videos/hero.mp4");
   const [slotALoaded, setSlotALoaded] = useState(false);
   const [slotBLoaded, setSlotBLoaded] = useState(false);
 
@@ -82,6 +85,22 @@ export function ArtemiiHero({
   const videoRefB = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
+
+  // Synchronize slot sources whenever the database playlist updates
+  useEffect(() => {
+    if (playlist.length > 0) {
+      setSlotASrc(playlist[0].src);
+      setSlotBSrc(playlist[1]?.src || playlist[0].src);
+      setCurrentClipIdx(0);
+      setElapsedMs(0);
+      setActiveSlot("A");
+      if (videoRefA.current) {
+        videoRefA.current.src = playlist[0].src;
+        videoRefA.current.load();
+        videoRefA.current.play().catch(() => {});
+      }
+    }
+  }, [playlist]);
 
   // Live ticking clock in IST
   useEffect(() => {
@@ -104,7 +123,7 @@ export function ArtemiiHero({
 
   // Multi-video timer sequence engine
   useEffect(() => {
-    if (!isVideoPlaying) return;
+    if (!isVideoPlaying || playlist.length <= 1) return;
 
     const tickInterval = 100; // 100ms precision
     const totalSpanMs = timeSpan * 1000;
@@ -367,6 +386,7 @@ export function ArtemiiHero({
         {/* Video Slot A (Seamless opacity crossfade) */}
         <video
           ref={videoRefA}
+          src={slotASrc}
           autoPlay
           loop
           muted
@@ -376,13 +396,12 @@ export function ArtemiiHero({
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 z-10 ${
             activeSlot === "A" && slotALoaded ? "opacity-45" : "opacity-0"
           } ${effectsActive ? "filter invert contrast-150" : "filter contrast-125 brightness-80"}`}
-        >
-          <source src={slotASrc} type="video/mp4" />
-        </video>
+        />
 
         {/* Video Slot B (Seamless opacity crossfade) */}
         <video
           ref={videoRefB}
+          src={slotBSrc}
           autoPlay
           loop
           muted
@@ -392,9 +411,7 @@ export function ArtemiiHero({
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 z-10 ${
             activeSlot === "B" && slotBLoaded ? "opacity-45" : "opacity-0"
           } ${effectsActive ? "filter invert contrast-150" : "filter contrast-125 brightness-80"}`}
-        >
-          <source src={slotBSrc} type="video/mp4" />
-        </video>
+        />
 
         {/* Dark Vignette & Studio Grading Gradients */}
         <div className="absolute inset-0 bg-radial from-transparent via-[#080808]/70 to-[#040404]/95 z-20" />

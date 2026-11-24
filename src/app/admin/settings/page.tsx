@@ -363,26 +363,46 @@ export default function AdminSettingsPage() {
               <span className="text-[11px] font-mono font-bold text-[#F5F3EF] uppercase">
                 Active Sequence Clips
               </span>
-              <button
-                type="button"
-                onClick={() => {
-                  try {
-                    const parsed = JSON.parse(settings.hero_playlist || "[]");
-                    parsed.push({
-                      title: "NEW // VIDEO CLIP",
-                      src: "/videos/hero.mp4",
-                      duration: parseInt(settings.hero_clip_span, 10) || 6,
-                    });
-                    setSettings({ ...settings, hero_playlist: JSON.stringify(parsed, null, 2) });
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }}
-                className="inline-flex items-center gap-1 text-[10px] font-mono text-[#B6FF5C] hover:underline"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Add Video</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm("Remove all default videos and leave 1 single custom video?")) {
+                      const single = [
+                        {
+                          title: "CUSTOM // HERO VIDEO",
+                          src: settings.hero_video_url || "/videos/hero.mp4",
+                          duration: parseInt(settings.hero_clip_span, 10) || 6,
+                        },
+                      ];
+                      setSettings({ ...settings, hero_playlist: JSON.stringify(single, null, 2) });
+                    }
+                  }}
+                  className="px-2 py-0.5 border border-red-900/60 bg-red-950/20 text-red-400 text-[10px] font-mono hover:bg-red-900/30"
+                >
+                  Remove Defaults
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    try {
+                      const parsed = JSON.parse(settings.hero_playlist || "[]");
+                      parsed.push({
+                        title: "NEW // VIDEO CLIP",
+                        src: "/videos/hero.mp4",
+                        duration: parseInt(settings.hero_clip_span, 10) || 6,
+                      });
+                      setSettings({ ...settings, hero_playlist: JSON.stringify(parsed, null, 2) });
+                    } catch (e) {
+                      console.error(e);
+                    }
+                  }}
+                  className="inline-flex items-center gap-1 text-[10px] font-mono text-[#B6FF5C] hover:underline"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Video</span>
+                </button>
+              </div>
             </div>
 
             {(() => {
